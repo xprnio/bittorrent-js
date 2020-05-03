@@ -4,7 +4,7 @@ import {
   ParserCallback,
   ParserDictionaryItem,
   ParserIntegerItem,
-  ParserListItem,
+  ParserListItem, ParserQueueItem,
   ParserState,
   ParserStringItem,
   ParserValue,
@@ -72,7 +72,7 @@ export class BepParser {
 
   private handleString(data: Buffer, offset: number, state: ParserState, callback: ParserCallback) {
     const current = state.queue[state.queue.length - 1] as ParserStringItem;
-    const parent = state.queue[state.queue.length - 2];
+    const parent = state.queue[state.queue.length - 2] as ParserQueueItem;
     const char = String.fromCharCode(data[offset]);
 
     if (current.length === null) current.length = 0;
@@ -112,7 +112,7 @@ export class BepParser {
 
   private handleInteger(data: Buffer, offset: number, state: ParserState, callback: ParserCallback) {
     const current = state.queue[state.queue.length - 1] as ParserIntegerItem;
-    const parent = state.queue[state.queue.length - 2];
+    const parent = state.queue[state.queue.length - 2] as ParserQueueItem;
     const char = String.fromCharCode(data[offset]);
 
     if (!current.stringValue) current.stringValue = '';
@@ -155,7 +155,7 @@ export class BepParser {
 
   private handleList(data: Buffer, offset: number, state: ParserState, callback: ParserCallback) {
     const current = state.queue[state.queue.length - 1] as ParserListItem;
-    const parent = state.queue[state.queue.length - 2];
+    const parent = state.queue[state.queue.length - 2] as ParserQueueItem;
     const char = String.fromCharCode(data[offset]);
 
     if (current.value === null) current.value = [];
@@ -197,7 +197,7 @@ export class BepParser {
 
   private handleDictionary(data: Buffer, offset: number, state: ParserState, callback: ParserCallback) {
     const current = state.queue[state.queue.length - 1] as ParserDictionaryItem;
-    const parent = state.queue[state.queue.length - 2];
+    const parent = state.queue[state.queue.length - 2] as ParserQueueItem;
     const char = String.fromCharCode(data[offset]);
 
     if (!current.keyValuePairs) current.keyValuePairs = [];
