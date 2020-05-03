@@ -1,54 +1,14 @@
-type BepList = Array<any>;
-type BepDictionary = { [key: string]: string | number | BepList | BepDictionary };
-type ParserValue = null | string | number | BepList | KeyValuePair;
-type ParserCallback = (err?: Error, result?: ParserValue) => void;
-
-interface ParserQueueItem {
-  type: null | 'string' | 'integer' | 'list' | 'dictionary';
-  value: ParserValue;
-  length: number | null;
-  parent?: ParserListItem | ParserDictionaryItem;
-}
-
-interface ParserStringItem {
-  type: 'string';
-  value: null | string;
-  length: number | null;
-  parent?: ParserListItem | ParserDictionaryItem;
-}
-
-interface ParserIntegerItem {
-  type: 'integer';
-  stringValue: null | string;
-  value: null | number;
-  length: null;
-  parent?: ParserListItem | ParserDictionaryItem;
-}
-
-interface ParserListItem {
-  type: 'list';
-  value: null | BepList;
-  length: null | number;
-  parent?: ParserListItem | ParserDictionaryItem;
-}
-
-interface ParserDictionaryItem {
-  type: 'dictionary';
-  keyValuePairs: Array<KeyValuePair>;
-  value: null | BepDictionary;
-  length: number | null;
-  parent?: ParserListItem | ParserDictionaryItem;
-}
-
-interface KeyValuePair {
-  key?: null | string;
-  value?: null | string | number | BepList | KeyValuePair;
-}
-
-interface ParserState {
-  queue: Array<ParserQueueItem>;
-  value: null | ParserValue;
-}
+import {
+  BepList,
+  KeyValuePair,
+  ParserCallback,
+  ParserDictionaryItem,
+  ParserIntegerItem,
+  ParserListItem,
+  ParserState,
+  ParserStringItem,
+  ParserValue,
+} from './parser.types';
 
 export class BepParser {
   async parse(data): Promise<ParserValue> {
@@ -72,7 +32,6 @@ export class BepParser {
   private parseNext(data: Buffer, offset: number, state: ParserState, callback: ParserCallback) {
     const char: string = String.fromCharCode(data[offset]);
     const current = state.queue[state.queue.length - 1];
-    const parent = state.queue[state.queue.length - 2];
 
     if (offset >= data.length) return callback(null, state.value);
 
@@ -103,7 +62,7 @@ export class BepParser {
       case 'dictionary':
         return this.handleDictionary(data, offset, state, callback);
       default:
-        callback(new Error(`Invalid type: ${current.type}`));
+        callback(new Error(`Invalid type: ${ current.type }`));
     }
   }
 
