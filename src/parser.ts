@@ -51,9 +51,7 @@ interface ParserState {
 }
 
 export class BepParser {
-  handleString() {}
-
-  parseNext(data: Buffer, offset: number, state: ParserState, callback: ParserCallback): void {
+  parseNext(data: Buffer, offset: number, state: ParserState, callback: ParserCallback) {
     const char: string = String.fromCharCode(data[offset]);
     const current = state.queue[state.queue.length - 1];
     const parent = state.queue[state.queue.length - 2];
