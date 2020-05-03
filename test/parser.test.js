@@ -1,4 +1,4 @@
-const { BepParser } = require('../parser');
+const { BepParser } = require('../src/parser');
 
 const ascii = (string) => string.split('').map(c => c.charCodeAt(0));
 const expectThrowAsync = async (fn, error) => {
