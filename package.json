@@ -4,6 +4,8 @@
   "description": "",
   "main": "cli.js",
   "scripts": {
+    "build": "tsc",
+    "pretest": "npm run build",
     "test": "jest"
   },
   "keywords": [],
